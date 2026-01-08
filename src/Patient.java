@@ -1,74 +1,58 @@
-public class Patient {
-    private int patientID;
+public class Patient{
+    private int patientId;
     private String fullName;
     private int age;
     private String bloodType;
 
-    public Patient(int patientID, String fullName, int age, String bloodType){
-        this.patientID= patientID;
-        this.fullName= fullName;
-        this.age= age;
-        this.bloodType= bloodType;
+    public Patient(int patientId, String fullName, int age, String bloodType){
+        this.patientId=patientId;
+        setFullName(fullName);
+        setAge(age);
+        this.bloodType=bloodType;
     }
-
-    public Patient(){
-        this.patientID = 0;
-        this.fullName = "unknown";
-        this.age = 0;
-        this.bloodType = "unknown";
+    public int getPatientId(){
+        return patientId;
     }
-
-    public int getPatientID() {
-        return patientID;
-    }
-    public void setPatientID() {
-        this.patientID= patientID;
-    }
-
-    public String getFullName() {
+    public String getFullName(){
         return fullName;
     }
-    public void setFullName() {
-        this.fullName= fullName;
-    }
-
-    public int getAge() {
+    public int getAge(){
         return age;
     }
-    public void setAge() {
-        this.age= age;
-    }
-
-    public String getBloodType() {
+    public String getBloodType(){
         return bloodType;
     }
 
-    public void setBloodType() {
-        this.bloodType = bloodType;
+    public void setFullName(String fullName){
+        if(fullName != null && !fullName.trim().isEmpty()){
+            this.fullName=fullName;
+        }
+        else{
+            this.fullName="Unknown";
+            System.out.println("Name cannot be empty. Set to 'Unknown'.");
+        }
     }
 
+    public void setAge(int age) {
+        if(age>=0){
+            this.age = age;
+        }
+        else{
+            this.age=0;
+            System.out.println("Age cannot be negative. Set to 0.");
+        }
+    }
 
     public boolean isMinor(){
         return age<18;
     }
 
-
-    public String getAgeCategory(){
-        if (age<18){
-            return "Minor";
-        }else if (age<60){
-            return "Adult";
-        }else {
-            return "Senior";
-        }
-    }
-
     @Override
     public String toString() {
-        return "Patient{ID=" + patientID +
+        return "Patient{id=" + patientId +
                 ", name='" + fullName +
                 "', age=" + age +
                 ", bloodType='" + bloodType + "'}";
-
     }
+
 }
