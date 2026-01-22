@@ -57,9 +57,8 @@ public abstract class Appointment {
     }
 
 
-    public abstract void conductAppointment(){
-        System.out.println("Assignment1.Appointment is being conducted.");
-    }
+    public abstract void conductAppointment();
+    public abstract String getAppointmentType();
 
 
     @Override

@@ -1,32 +1,50 @@
 package model;
 
-public class PatientAppointment extends Appointment{
+import Appointment2.Appointment2;
+
+public class PatientAppointment extends Appointment implements Appointment2 {
     private String patientName;
 
     public PatientAppointment(int appointmentId, String date, String status, String patientName){
         super(appointmentId, date, status);
-        this.patientName= patientName;
+        setPatientName(patientName);
 
     }
     public String getPatientName(){
         return patientName;
     }
-    public void setAppointmentId(int appointmentId) {
-        super.setAppointmentId(appointmentId);
+
+    public void setPatientName(String patientName){
+        if (patientName==null || patientName.trim().isEmpty()){
+            throw new IllegalArgumentException("Patient name cannot be empty");
+        }
+        this.patientName=patientName;
     }
+
+
 
     @Override
     public void conductAppointment(){
         System.out.println("Assignment1.Patient appointment for " + patientName + " is in progress.");
     }
 
-
-    public boolean hasValidDate() {
-        return date != null && !date.trim().isEmpty();
+    @Override
+    public String getAppointmentType() {
+        return "Patient Appointment";
     }
 
+    public void isInProgress(){
+        System.out.println(patientName + " appointment is in progress");
+    }
 
-    private static void equalsIgnoreCase(String emergency) {
+    public boolean isFistVisit(){
+        return status.equalsIgnoreCase("new");
+    }
+
+    @Override
+    public void displayInfo(){
+        super.displayInfo();
+        System.out.println("Patient name: " + patientName);
     }
 
     @Override
@@ -35,4 +53,13 @@ public class PatientAppointment extends Appointment{
     }
 
 
+    @Override
+    public void displayAppointment() {
+
+    }
+
+    @Override
+    public void run() {
+
+    }
 }
