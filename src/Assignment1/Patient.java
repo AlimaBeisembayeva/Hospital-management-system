@@ -1,3 +1,5 @@
+package Assignment1;
+
 public class Patient{
     private int patientId;
     private String fullName;
@@ -49,7 +51,7 @@ public class Patient{
 
     @Override
     public String toString() {
-        return "Patient{id=" + patientId +
+        return "Assignment1.Patient{id=" + patientId +
                 ", name='" + fullName +
                 "', age=" + age +
                 ", bloodType='" + bloodType + "'}";

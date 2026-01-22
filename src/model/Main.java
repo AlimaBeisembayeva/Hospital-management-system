@@ -1,4 +1,4 @@
-package srk1;
+package model;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -67,13 +67,13 @@ public class Main {
         System.out.println("================================");
         System.out.println("     HOSPITAL MANAGEMENT SYSTEM");
         System.out.println("================================");
-        System.out.println("1. Add Appointment");
-        System.out.println("2. Add Patient Appointment");
-        System.out.println("3. Add Doctor Appointment");
+        System.out.println("1. Add Assignment1.Appointment");
+        System.out.println("2. Add Assignment1.Patient Assignment1.Appointment");
+        System.out.println("3. Add Assignment1.Doctor Assignment1.Appointment");
         System.out.println("4. View all Appointments");
         System.out.println("5. Make all Appointments work");
-        System.out.println("6. View Patient Appointment only");
-        System.out.println("7. View Doctor Appointment only");
+        System.out.println("6. View Assignment1.Patient Assignment1.Appointment only");
+        System.out.println("7. View Assignment1.Doctor Assignment1.Appointment only");
         System.out.println("0. Exit");
         System.out.println("=================================");
         System.out.println("Enter your choice: ");
@@ -95,7 +95,7 @@ public class Main {
         Appointment appointment = new Appointment(appointmentId, date, status);
         appointments.add(appointment);
 
-        System.out.println("Appointment added successfully!");
+        System.out.println("Assignment1.Appointment added successfully!");
     }
 
     private static void addPatientAppointment() {
@@ -110,14 +110,14 @@ public class Main {
         System.out.println("Enter status: ");
         String status = scanner.nextLine();
 
-        System.out.println("Enter Patient name: ");
+        System.out.println("Enter Assignment1.Patient name: ");
         String patientName = scanner.nextLine();
         scanner.nextLine();
 
         Appointment appointment = new PatientAppointment(appointmentId, date, status, patientName);
         appointments.add(appointment);
 
-        System.out.println("Patient Appointment added successfully!");
+        System.out.println("Assignment1.Patient Assignment1.Appointment added successfully!");
     }
 
     private static void addDoctorAppointment() {
@@ -132,7 +132,7 @@ public class Main {
         System.out.println("Enter status: ");
         String status= scanner.nextLine();
 
-        System.out.println("Enter Doctor name: ");
+        System.out.println("Enter Assignment1.Doctor name: ");
         String doctorName = scanner.nextLine();
 
         System.out.println("Enter specialization: ");
@@ -143,7 +143,7 @@ public class Main {
         Appointment appointment = new Appointment(appointmentId, date, status);
         appointments.add(appointment);
 
-        System.out.println("Doctor appointment added successfully!");
+        System.out.println("Assignment1.Doctor appointment added successfully!");
     }
 
     private static void viewAppointment() {
@@ -167,15 +167,15 @@ public class Main {
             if (a instanceof PatientAppointment) {
                 PatientAppointment patientAppointment = (PatientAppointment) a;
                 if (patientAppointment.hasValidDate()) {
-                    System.out.println("Appointment date is valid.");
+                    System.out.println("Assignment1.Appointment date is valid.");
                 } else {
-                    System.out.println("Appointment date is missing.");
+                    System.out.println("Assignment1.Appointment date is missing.");
                 }
 
             } else if (a instanceof DoctorAppointment) {
                 DoctorAppointment doctorAppointment = (DoctorAppointment) a;
                 if (doctorAppointment.isSpecialistAppointment()) {
-                    System.out.println("Doctor is specialist");
+                    System.out.println("Assignment1.Doctor is specialist");
                 }
             }
             System.out.println();
@@ -246,7 +246,7 @@ public class Main {
                 System.out.println("Date: " + doctorAppointment.getDate());
 
                 if (doctorAppointment.isSpecialistAppointment()) {
-                    System.out.println("Doctor is specialist");
+                    System.out.println("Assignment1.Doctor is specialist");
                 }
                 System.out.println();
             }

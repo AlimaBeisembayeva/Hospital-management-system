@@ -1,4 +1,4 @@
-package srk1;
+package model;
 
 public class PatientAppointment extends Appointment{
     private String patientName;
@@ -17,7 +17,7 @@ public class PatientAppointment extends Appointment{
 
     @Override
     public void conductAppointment(){
-        System.out.println("Patient appointment for " + patientName + " is in progress.");
+        System.out.println("Assignment1.Patient appointment for " + patientName + " is in progress.");
     }
 
 
@@ -31,7 +31,7 @@ public class PatientAppointment extends Appointment{
 
     @Override
     public String toString() {
-        return super.toString() + ", Patient: " + patientName;
+        return super.toString() + ", Assignment1.Patient: " + patientName;
     }
 
 

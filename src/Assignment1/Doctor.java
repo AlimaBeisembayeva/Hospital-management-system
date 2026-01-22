@@ -1,3 +1,5 @@
+package Assignment1;
+
 public class Doctor {
     private int doctorId;
     private String fullName;
@@ -28,7 +30,7 @@ public class Doctor {
         if (fullName != null && !fullName.trim().isEmpty()) {
             this.fullName = fullName;
         } else {
-            this.fullName = "Unknown Doctor";
+            this.fullName = "Unknown Assignment1.Doctor";
         }
     }
 
@@ -47,7 +49,7 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return "Doctor{ID=" + doctorId +
+        return "Assignment1.Doctor{ID=" + doctorId +
                 ", name='" + fullName +
                 "', specialization =" + specialization +
                 ", experienceYears='" + experienceYears + "'}";

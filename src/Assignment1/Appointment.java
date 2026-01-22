@@ -1,3 +1,5 @@
+package Assignment1;
+
 public class Appointment {
     private int appointmentID;
     private String patientName;
@@ -54,7 +56,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment{ID=" + appointmentID +
+        return "Assignment1.Appointment{ID=" + appointmentID +
                 ", patient='" + patientName +
                 "', doctor='" + doctorName +
                 "', date='" + date + "'}";
