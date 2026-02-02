@@ -1,5 +1,7 @@
 package model;
 
+import Appointment2.Appointment2;
+
 public class PatientData implements Acceptable{
     private String name;
     private int age;

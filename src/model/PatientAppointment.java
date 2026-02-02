@@ -37,7 +37,7 @@ public class PatientAppointment extends Appointment implements Appointment2 {
         System.out.println(patientName + " appointment is in progress");
     }
 
-    public boolean isFistVisit(){
+    public boolean isFirstVisit(){
         return status.equalsIgnoreCase("new");
     }
 

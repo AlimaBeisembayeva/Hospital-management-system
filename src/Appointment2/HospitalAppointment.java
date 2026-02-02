@@ -143,7 +143,7 @@ public class HospitalAppointment implements Appointment2{
         } catch (IllegalArgumentException e) {
             System.out.println("Validation Error: " + e.getMessage());
         }
-        }
+    }
 
     private void addPatientAppointment() {
         try {
@@ -183,31 +183,31 @@ public class HospitalAppointment implements Appointment2{
         System.out.println("===========================");
 
         if (allAppointments.isEmpty()) {
-        System.out.println("No appointments found");
-        return;
+            System.out.println("No appointments found");
+            return;
         }
 
         for (int i = 0; i < allAppointments.size(); i++) {
-        Appointment2 a = allAppointments.get(i);
-        System.out.println((i + 1) + ". ");
+            Appointment2 a = allAppointments.get(i);
+            System.out.println((i + 1) + ". ");
 
-        if (a instanceof DoctorAppointment) {
-            System.out.println("[DOCTOR]");
-            DoctorAppointment doctorAppointment = (DoctorAppointment) a;
-            if (doctorAppointment.isSpecialistAppointment()) {
-                System.out.println("Doctor is specialist");
+            if (a instanceof DoctorAppointment) {
+                System.out.println("[DOCTOR]");
+                DoctorAppointment doctorAppointment = (DoctorAppointment) a;
+                if (doctorAppointment.isSpecialistAppointment()) {
+                    System.out.println("Doctor is specialist");
+                }
+            } else if (a instanceof PatientAppointment) {
+                System.out.println("[PATIENT]");
+                PatientAppointment patientAppointment = (PatientAppointment) a;
+                if (patientAppointment.isFirstVisit()) {
+                    System.out.println(" First Visit");
+                }
             }
-        } else if (a instanceof PatientAppointment) {
-            System.out.println("[PATIENT]");
-            PatientAppointment patientAppointment = (PatientAppointment) a;
-            if (patientAppointment.isFistVisit()) {
-                System.out.println(" First Visit");
-            }
+
+            System.out.println(a.toString());
+
         }
-
-        System.out.println(a.toString());
-
-       }
     }
 
     private void viewDoctorAppointment() {
@@ -222,7 +222,7 @@ public class HospitalAppointment implements Appointment2{
                 DoctorAppointment doctorAppointment = (DoctorAppointment) a;
                 System.out.println(doctorAppointment.toString());
                 if(doctorAppointment.isSpecialistAppointment()) {
-                   System.out.println(" Doctor is specialist");
+                    System.out.println(" Doctor is specialist");
                 }
                 System.out.println();
                 foundDoctor=true;
@@ -245,7 +245,7 @@ public class HospitalAppointment implements Appointment2{
             if (a instanceof PatientAppointment) {
                 PatientAppointment patientAppointment = (PatientAppointment) a;
                 System.out.println(patientAppointment.toString());
-                if (patientAppointment.isFistVisit()) {
+                if (patientAppointment.isFirstVisit()) {
                     System.out.println("The first visit");
                 }
                 System.out.println();
@@ -304,8 +304,8 @@ public class HospitalAppointment implements Appointment2{
         System.out.println("==========================================");
 
         if(allPatientData.isEmpty()){
-           System.out.println("No patient data found");
-           return;
+            System.out.println("No patient data found");
+            return;
         }
 
         for (int i=0; i<allPatientData.size();i++){
@@ -346,6 +346,9 @@ public class HospitalAppointment implements Appointment2{
 
     }
 }
+
+
+
 
 
 

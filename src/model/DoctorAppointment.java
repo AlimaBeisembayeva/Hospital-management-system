@@ -12,6 +12,14 @@ public class DoctorAppointment extends Appointment implements Appointment2 {
         setSpecialization(specialization);
     }
 
+    public String getDoctorName(){
+        return doctorName;
+    }
+
+    public String getSpecialization(){
+        return specialization;
+    }
+
     public void setDoctorName(String doctorName){
         if ( doctorName ==null || doctorName.trim().isEmpty()){
             throw new IllegalArgumentException("Name cannot be empty");
