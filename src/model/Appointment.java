@@ -1,6 +1,8 @@
 package model;
 
-public abstract class Appointment {
+import Appointment2.Appointment2;
+
+public abstract class Appointment implements Appointment2 {
     protected int appointmentId;
     protected String date;
     protected String status;

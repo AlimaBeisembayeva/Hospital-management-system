@@ -124,7 +124,7 @@ public class AppointmentDAO {
             ResultSet resultSet= statement.executeQuery();
 
             if(resultSet.next()){
-                Appointment appointment=extractAppointmentFromResultSer(resultSet);
+                Appointment appointment=extractAppointmentFromResultSet(resultSet);
 
                 resultSet.close();
                 statement.close();
@@ -164,7 +164,7 @@ public class AppointmentDAO {
             ResultSet resultSet=statement.executeQuery();
 
             while (resultSet.next()){
-                Appointment appointment= extractAppointmentfFromResultSet(resultSet);
+                Appointment appointment= extractAppointmentFromResultSet(resultSet);
                 if (appointment instanceof DoctorAppointment){
                     doctorAppointments.add((DoctorAppointment) appointment);
                 }
@@ -322,7 +322,7 @@ public class AppointmentDAO {
 
         try{
             PreparedStatement statement= connection.prepareStatement(sql);
-            statement.setString((1, "%" + date + "%"));
+            statement.setString(1, "%" + date + "%");
 
             ResultSet resultSet=statement.executeQuery();
 
@@ -349,30 +349,100 @@ public class AppointmentDAO {
     }
 
 
-    public List<Appointment> searchByStatus()
+    public List<Appointment> searchByStatus(boolean emergency){
+        List<Appointment> appointmentList=new ArrayList<>();
 
+        String sql="SELECT * FROM appointment WHERE is_emergency=?";
 
+        Connection connection= DatabaseConnection.getConnection();
+        if(connection==null) return appointmentList;
 
-}       /*try{
+        try{
             PreparedStatement statement=connection.prepareStatement(sql);
+            statement.setBoolean(1, emergency);
 
-            statement.setInt(1, appointment.getAppointmentId());
-            statement.setString(2, appointment.getDate());
-            statement.setString(3, appointment.getStatus());
+            ResultSet resultSet=statement.executeQuery();
 
-            int rowInserted=statement.executeUpdate();
-
-            if(rowInserted>0){
-                System.out.println("Appointment inserted successfully");
+            while (resultSet.next()){
+                Appointment appointment=extractAppointmentFromResultSet(resultSet);
+                if(appointment!=null){
+                    appointmentList.add(appointment);
+                }
             }
 
+            resultSet.close();
             statement.close();
 
+            System.out.println("Found " + appointmentList.size() + " appointment with is_emergency =" + emergency);
+
         }catch (SQLException e){
-            System.out.println("Insert failed!");
+            System.out.println("Search by boolean failed!");
             e.printStackTrace();
         }finally {
             DatabaseConnection.closeConnection(connection);
         }
+
+        return appointmentList;
     }
+
+    private Appointment extractAppointmentFromResultSet(ResultSet resultSet) throws SQLException{
+        int appoitmentId= resultSet.getInt("appointment_id");
+        String date= resultSet.getString("date");
+        String status = resultSet.getString("status");
+        String appointmentType= resultSet.getString("Appointment_type");
+
+        Appointment appointment=null;
+
+        if("DoctorAppointment".equals(appointmentType)){
+            String doctorName= resultSet.getString("patient_name");
+            String specialization = resultSet.getString("specialization");
+            appointment = new DoctorAppointment(appoitmentId, date, status, doctorName,specialization);
+
+        }else if("PatientAppointment".equals(appointmentType)){
+            String patientName=resultSet.getString("patient_name");
+            appointment = new PatientAppointment(appoitmentId, date, status, patientName);
+
+        }
+
+        return appointment;
+    }
+
+    public void displayAllAppointment(){
+        List<Appointment> appointmentList= getAllAppointment();
+
+        System.out.println("\n========================================");
+        System.out.println("   ALL STAFF FROM DATABASE");
+        System.out.println("========================================");
+
+        if(appointmentList.isEmpty()){
+            System.out.println("No appointments in database.");
+        }else{
+            for(int i=0; i<appointmentList.size(); i++){
+                Appointment a= appointmentList.get(i);
+                System.out.println((i+1) + ". ");
+                System.out.println("[" + a.getAppointmentType() + "]");
+                System.out.println(a.toString());
+            }
+        }
+
+        System.out.println("========================================\n");
+    }
+
+    public void demonstratePolymorphism(){
+        List<Appointment> appointmentList=getAllAppointment();
+
+        System.out.println("\n========================================");
+        System.out.println("  POLYMORPHISM: Staff from Database");
+        System.out.println("========================================");
+
+        if (appointmentList.isEmpty()){
+            System.out.println("No appointment to demonstrate.");
+        }else{
+            for(Appointment2 a: appointmentList){
+                a.displayAppointment();
+            }
+        }
+        System.out.println("========================================\n");
+    }
+
 }
