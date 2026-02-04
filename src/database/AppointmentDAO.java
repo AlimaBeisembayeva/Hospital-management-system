@@ -16,7 +16,7 @@ import java.util.List;
 
 public class AppointmentDAO {
     public boolean insertDoctorAppointment(DoctorAppointment doctorAppointment) {
-        String sql = "INSERT INTO appointment(appointment_id, date, status, doctor_name, specialization)" + " VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO appointment(appointment_id, appointment_date, status, doctor_name, specialization)" + " VALUES (?, TO_DATE(?, 'DD-MM-YY') , ?, ?, ?)";
 
         Connection connection = DatabaseConnection.getConnection();
         if (connection == null) return false;
@@ -48,7 +48,7 @@ public class AppointmentDAO {
     }
 
     public boolean insertPatientAppointment(PatientAppointment patientAppointment){
-        String sql= "INSERT INTO appointment(appointment_id, date, status, patient_name)" + "VALUES(?, ?, ?, ?)";
+        String sql= "INSERT INTO appointment(appointment_id,appointment_date, status, patient_name)" + "VALUES(?, TO_DATE(?, 'DD-MM-YY') , ?, ?)";
 
         Connection connection= DatabaseConnection.getConnection();
         if (connection==null) return false;
@@ -220,7 +220,7 @@ public class AppointmentDAO {
     }
 
     public boolean updateDoctorAppointments(DoctorAppointment doctorAppointment){
-        String sql="UPDATE appointment SET date=?, status=?, doctor_name=?, specialization=?" + "WHERE appointment_id=?";
+        String sql="UPDATE appointment SET appointment_date=?, status=?, doctor_name=?, specialization=?" + "WHERE appointment_id=?";
 
         Connection connection= DatabaseConnection.getConnection();
         if (connection==null) return false;
@@ -253,7 +253,7 @@ public class AppointmentDAO {
 
 
     public boolean updatePatientAppointment(PatientAppointment patientAppointment){
-        String sql= "UPDATE patient appointment SET date=?, status=?, patient_name=?" + "WHERE appointment_id=?";
+        String sql= "UPDATE patient appointment SET appointment_date=?, status=?, patient_name=?" + "WHERE appointment_id=?";
 
         Connection connection= DatabaseConnection.getConnection();
         if (connection==null) return false;
@@ -315,7 +315,7 @@ public class AppointmentDAO {
     public List<Appointment> searchByDate(String date){
         List<Appointment> appointmentList=new ArrayList<>();
 
-        String sql="SELECT * FROM appointment WHERE date ILIKE ? ORDER BY date";
+        String sql="SELECT * FROM appointment WHERE appointment_date ILIKE ? ORDER BY appointment_date";
 
         Connection connection= DatabaseConnection.getConnection();
         if (connection==null) return appointmentList;
@@ -385,11 +385,11 @@ public class AppointmentDAO {
         return appointmentList;
     }
 
-    private Appointment extractAppointmentFromResultSet(ResultSet resultSet) throws SQLException{
+   private Appointment extractAppointmentFromResultSet(ResultSet resultSet) throws SQLException{
         int appoitmentId= resultSet.getInt("appointment_id");
-        String date= resultSet.getString("date");
+        String date= resultSet.getString("appointment_date");
         String status = resultSet.getString("status");
-        String appointmentType= resultSet.getString("Appointment_type");
+        String appointmentType= resultSet.getString("appointment_type");
 
         Appointment appointment=null;
 
