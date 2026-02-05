@@ -16,7 +16,7 @@ import java.util.List;
 
 public class AppointmentDAO {
     public boolean insertDoctorAppointment(DoctorAppointment doctorAppointment) {
-        String sql = "INSERT INTO appointment(appointment_id, appointment_date, status, doctor_name, specialization)" + " VALUES (?, TO_DATE(?, 'DD-MM-YY') , ?, ?, ?)";
+        String sql = "INSERT INTO appointment(appointment_id, appointment_date, status, appointment_type, patient_name, doctor_name, specialization)" + " VALUES (?, TO_DATE(?, 'DD-MM-YY') , ?, ?, ?, ?, ?)";
 
         Connection connection = DatabaseConnection.getConnection();
         if (connection == null) return false;
@@ -26,8 +26,10 @@ public class AppointmentDAO {
             statement.setInt(1, doctorAppointment.getAppointmentId());
             statement.setString(2, doctorAppointment.getDate());
             statement.setString(3, doctorAppointment.getStatus());
-            statement.setString(4, doctorAppointment.getDoctorName());
-            statement.setString(5, doctorAppointment.getSpecialization());
+            statement.setString(4, "DOCTOR_APPOINTMENT");
+            statement.setString(5, "null");
+            statement.setString(6, doctorAppointment.getDoctorName());
+            statement.setString(7, doctorAppointment.getSpecialization());
 
             int rowsInserted=statement.executeUpdate();
             statement.close();

@@ -3,7 +3,9 @@ package Appointment2;
 import model.*;
 import Exception.InvalidInputException;
 import database.*;
+import org.postgresql.copy.CopyOut;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.nio.channels.ScatteringByteChannel;
 import java.sql.SQLOutput;
 import java.util.List;
@@ -108,7 +110,7 @@ public class HospitalAppointment implements Appointment2{
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
                 scanner.nextLine();
-                pressEnterToContinue;
+                pressEnterToContinue();
             }
 
 
@@ -297,99 +299,97 @@ public class HospitalAppointment implements Appointment2{
 
 
     private void deleteAppointment(){
+        System.out.println("\n┌─ DELETE APPOINTMENT ─────────────────────────┐");
+        System.out.println("│ Enter Appointment ID to delete: ");
 
+        try{
+            int appointmentId=scanner.nextInt();
+            scanner.nextLine();
+
+            Appointment appointment= appointmentDAO.getAppointmentById(appointmentId);
+
+            if (appointment==null){
+                System.out.println("No appointment found with ID: " + appointmentId);
+                return;
+            }
+            System.out.println("| Appointment to delete: ");
+            System.out.println("| " + appointment.toString());
+            System.out.println("└────────────────────────────────────────┘");
+
+            System.out.println("Are you sure? (yes/no): ");
+            String confirmation= scanner.nextLine();
+
+            if (confirmation.equalsIgnoreCase("yes")){
+                appointmentDAO.deleteAppointment(appointmentId);
+            }else{
+                System.out.println("Deletion cancelled.");
+            }
+        }catch (java.util.InputMismatchException e){
+            System.out.println("Error Invalid Input!");
+            scanner.nextLine();
+        }
+
+    }
+
+
+    private void searchByDate(){
+        System.out.println("\n┌─ SEARCH BY DATE ───────────────────────┐");
+        System.out.println("| Enter date to search: ");
+        String date= scanner.nextLine();
+        System.out.println("└────────────────────────────────────────┘");
+
+        List<Appointment> results=appointmentDAO.searchByDate(date);
+
+        displaySearchResults(results, "Search: '" + date + "'");
+    }
+
+    private void searchByStatus(){
+       System.out.println("\n┌─ SEARCH BY STATUS ───────────────────────┐");
+       System.out.println("| Enter status to search: ");
+       Boolean status=scanner.nextBoolean();
+        System.out.println("└────────────────────────────────────────┘");
+
+        List<Appointment> results=appointmentDAO.searchByStatus(status);
+
+        displaySearchResults(results, "Search: '" + status + "'");
+
+    }
+
+    private void displaySearchResults(List<Appointment> results, String criteria){
+        System.out.println("\n╔════════════════════════════════════════╗");
+        System.out.println("║         SEARCH RESULTS                ║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("Criteria: " + criteria);
+        System.out.println("─────────────────────────────────────────");
+
+        if (results.isEmpty()){
+            System.out.println("No appointment found matching criteria");
+        }else{
+            for(int i=0; i<results.size(); i++){
+                Appointment a=results.get(i);
+                System.out.println((i+1) + ". ");
+                System.out.println("[" + a.getAppointmentType() + "] ");
+                System.out.println(a.toString());
+            }
+            System.out.println("─────────────────────────────────────────");
+            System.out.println("Total results: " + results.size());
+        }
     }
 
 
 
     private void demonstratePolymorphism(){
-        System.out.println("========================================");
-        System.out.println("    POLYMORPHISM: All Appointments Conducted");
-        System.out.println("========================================");
-
-        if(allAppointments.isEmpty()){
-            System.out.println("No appointments to demonstrate.");
-            return;
-        }
-        for (Appointment2 a: allAppointments){
-            a.displayAppointment();
-        }
-
-        System.out.println("As you can see same method but different behavior");
-        System.out.println("This is POLYMOROHISM in action");
-    }
-    private void addPatientData(){
-        try{
-            System.out.println(" Add Patient Data");
-
-            System.out.println("Enter name: ");
-            String name= scanner.nextLine();
-
-            System.out.println("Enter age: ");
-            int age = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.println("Enter state: ");
-            String state= scanner.nextLine();
-
-            PatientData data= new PatientData(name, age, state);
-            allPatientData.add(data);
-            System.out.println("Patient data added succesfully");
-        }catch (java.util.InputMismatchException e){
-            System.out.println("Error: invalid input type");
-            scanner.nextLine();
-        }catch (IllegalArgumentException e){
-            System.out.println("Validation Error: " + e.getMessage());
-        }
+        demonstratePolymorphism();
     }
 
-    private void viewPatientData(){
-        System.out.println("\\n========================================");
-        System.out.println("              PATIENT DATA                ");
-        System.out.println("==========================================");
-
-        if(allPatientData.isEmpty()){
-            System.out.println("No patient data found");
-            return;
-        }
-
-        for (int i=0; i<allPatientData.size();i++){
-            System.out.println((i+1) + ". " + allPatientData.get(i).toString());
-        }
+    private void pressEnterToContinue(){
+        System.out.println("\n[Press Enter to continue...]");
+        scanner.nextLine();
     }
 
-    private void acceptPatientData(){
-        System.out.println("\n--- Accept Patient Data ---");
 
-        if(allPatientData.isEmpty()){
-            System.out.println("No data available to be accepted");
-            return;
-        }
 
-        System.out.println("Available data: ");
-        for(int i=0; i<allPatientData.size(); i++){
-            System.out.println((i+1) + ". " + allPatientData.get(i).getName());
-        }
 
-        try{
-            System.out.println("Select data number to check: ");
-            int choice=scanner.nextInt();
-
-            if(choice<1 || choice>allPatientData.size()){
-                throw new InvalidInputException("Invalid data number");
-            }
-
-            PatientData data= allPatientData.get(choice - 1);
-            data.accept();
-            System.out.println("Data: " + data.getData());
-        } catch (java.util.InputMismatchException e){
-            System.out.println("Eror: PLease enter a valid number");
-            scanner.nextLine();
-        }catch (InvalidInputException e){
-            System.out.println("Error: " + e.getMessage());
-        }
-
-    }
 }
 
 
