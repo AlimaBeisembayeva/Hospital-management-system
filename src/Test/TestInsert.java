@@ -11,12 +11,12 @@ import java.util.List;
 
 public class TestInsert {
     public static void main(String[] args){
-        PatientAppointment patientAppointment= new PatientAppointment(259457, "05-02-26", "emergency", "Alima");
+        PatientAppointment patientAppointment= new PatientAppointment(258457, "05-02-26", "emergency", "Alima");
 
         AppointmentDAO dao= new AppointmentDAO();
         dao.insertPatientAppointment(patientAppointment);
 
-        DoctorAppointment doctorAppointment=new DoctorAppointment(268963, "27-01-26", "in progress", "Yeldana", "doctor");
+        DoctorAppointment doctorAppointment=new DoctorAppointment(26363, "27-01-26", "in progress", "Yeldana", "doctor");
 
         AppointmentDAO dao1= new AppointmentDAO();
         dao1.insertDoctorAppointment(doctorAppointment);

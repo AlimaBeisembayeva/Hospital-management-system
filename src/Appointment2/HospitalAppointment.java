@@ -1,36 +1,31 @@
 package Appointment2;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import model.DoctorAppointment;
-import model.PatientAppointment;
-import model.PatientData;
+import model.*;
 import Exception.InvalidInputException;
+import database.*;
 
+import java.nio.channels.ScatteringByteChannel;
+import java.sql.SQLOutput;
+import java.util.List;
+import java.util.Scanner;
 
 
 
 public class HospitalAppointment implements Appointment2{
-    private final ArrayList<Appointment2> allAppointments;
-    private final ArrayList<PatientData> allPatientData;
-    public Scanner scanner;
+    private Scanner scanner;
+    private AppointmentDAO appointmentDAO;
 
     public HospitalAppointment() {
-        this.allAppointments = new ArrayList<>();
-        this.allPatientData = new ArrayList<>();
         this.scanner = new Scanner(System.in);
+        this.appointmentDAO=new AppointmentDAO();
 
-
-        try {
-            allAppointments.add(new DoctorAppointment(251027, "23.01.2026", "in progress", "Alima Beisembayeva", "surgeon"));
-            allAppointments.add(new PatientAppointment(261027, "23.01.2026", "accepted", "Yeldana Sailaubek"));
-
-            allPatientData.add(new PatientData("Aiasem Bekbolat", 17, "emergency"));
-            allPatientData.add(new PatientData("Laura Tursynbek", 17, "stable"));
-            allPatientData.add(new PatientData("Dannar Erezhep", 17, "accepted"));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error initializing test data: " + e.getMessage());
-        }
+        System.out.println("\n╔════════════════════════════════════════╗");
+        System.out.println("║  HOSPITAL MANAGEMENT SYSTEM v2.0    ║");
+        System.out.println("║  Week 8: Fully Database-Driven 🗄️     ║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("All data is stored in PostgreSQL");
+        System.out.println("No in-memory ArrayLists");
+        System.out.println("Complt=ete CRUD operations");
     }
 
     @Override
@@ -43,10 +38,11 @@ public class HospitalAppointment implements Appointment2{
         System.out.println("3. View all Appointments");
         System.out.println("4. View Patient Appointment only");
         System.out.println("5. View Doctor Appointment only");
-        System.out.println("6. Make all Appointments work");
-        System.out.println("7. Add Appointment Data");
-        System.out.println("8. View All Patient Data");
-        System.out.println("9. Accept PAtient Data");
+        System.out.println("6. Update Appointment");
+        System.out.println("7. Delete appointment");
+        System.out.println("8. Search by date");
+        System.out.println("9. Search by Status");
+        System.out.println("10. Polymorphism Demo");
         System.out.println("0. Exit");
         System.out.println("=================================");
     }
@@ -80,25 +76,31 @@ public class HospitalAppointment implements Appointment2{
                         viewPatientAppointment();
                         break;
                     case 6:
-                        demonstratePolymorphism();
+                        updateAppointment();
                         break;
                     case 7:
-                        addPatientData();
+                        deleteAppointment();
                         break;
                     case 8:
-                        viewPatientData();
+                        searchByDate();
                         break;
                     case 9:
-                        acceptPatientData();
+                        searchByStatus();
                         break;
+                    case 10:
+                        demonstratePolymorphism();
                     case 0:
                         running = false;
                         System.out.println("Thank you for using Hospital Management System!");
                         System.out.println("Goodbye!");
                         break;
                     default:
-                        System.out.println("Invalid choice! PLease select 0-9.");
+                        System.out.println("Invalid choice! PLease select 0-11.");
 
+                }
+
+                if (choice!=0){
+                    pressEnterToContinue();
                 }
             } catch (java.util.InputMismatchException e) {
                 System.out.println("Error: please enter a valid number!");
@@ -106,6 +108,7 @@ public class HospitalAppointment implements Appointment2{
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
                 scanner.nextLine();
+                pressEnterToContinue;
             }
 
 
@@ -135,10 +138,10 @@ public class HospitalAppointment implements Appointment2{
 
 
             DoctorAppointment doctorAppointment = new DoctorAppointment(appointmentId, date, status, doctorName, specialization);
-            allAppointments.add(doctorAppointment);
-            System.out.println("Doctor Appointment added successfully!");
+            appointmentDAO.insertDoctorAppointment(doctorAppointment);
+
         } catch (java.util.InputMismatchException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+            System.out.println("Error: Invalid Input type!");
             scanner.nextLine();
         } catch (IllegalArgumentException e) {
             System.out.println("Validation Error: " + e.getMessage());
@@ -165,8 +168,7 @@ public class HospitalAppointment implements Appointment2{
 
 
             PatientAppointment patientAppointment = new PatientAppointment(appointmentId, date, status, patientName);
-            allAppointments.add(patientAppointment);
-            System.out.println("Patient Appointment added succesfully!");
+            appointmentDAO.insertPatientAppointment(patientAppointment);
         } catch (java.util.InputMismatchException e) {
             System.out.println("Error: Invalid input type!");
             scanner.nextLine();
@@ -178,84 +180,127 @@ public class HospitalAppointment implements Appointment2{
 
 
     private void viewAllAppointments() {
-        System.out.println("===========================");
-        System.out.println("     VIEW ALL APPOINTMENTS");
-        System.out.println("===========================");
-
-        if (allAppointments.isEmpty()) {
-            System.out.println("No appointments found");
-            return;
-        }
-
-        for (int i = 0; i < allAppointments.size(); i++) {
-            Appointment2 a = allAppointments.get(i);
-            System.out.println((i + 1) + ". ");
-
-            if (a instanceof DoctorAppointment) {
-                System.out.println("[DOCTOR]");
-                DoctorAppointment doctorAppointment = (DoctorAppointment) a;
-                if (doctorAppointment.isSpecialistAppointment()) {
-                    System.out.println("Doctor is specialist");
-                }
-            } else if (a instanceof PatientAppointment) {
-                System.out.println("[PATIENT]");
-                PatientAppointment patientAppointment = (PatientAppointment) a;
-                if (patientAppointment.isFirstVisit()) {
-                    System.out.println(" First Visit");
-                }
-            }
-
-            System.out.println(a.toString());
-
-        }
+        appointmentDAO.displayAllAppointment();
     }
 
     private void viewDoctorAppointment() {
+        List<DoctorAppointment> doctorAppointments=appointmentDAO.getAllDoctorAppointment();
+
         System.out.println("===================================");
         System.out.println("       DOCTOR APPOINTMENTS ONLY");
         System.out.println("===================================");
 
-        boolean foundDoctor = false;
-
-        for (Appointment2 a : allAppointments) {
-            if (a instanceof DoctorAppointment) {
-                DoctorAppointment doctorAppointment = (DoctorAppointment) a;
-                System.out.println(doctorAppointment.toString());
-                if(doctorAppointment.isSpecialistAppointment()) {
-                    System.out.println(" Doctor is specialist");
+        if (doctorAppointments.isEmpty()) {
+            System.out.println("No doctor appointment in database");
+        }else{
+            for (int i=0; i<doctorAppointments.size(); i++){
+                DoctorAppointment doctorAppointment= doctorAppointments.get(i);
+                System.out.println((i+1) + ". " + doctorAppointment.toString());
+                System.out.println(" Specialization" + doctorAppointment.getSpecialization());
+                if (doctorAppointment.isSpecialistAppointment()){
+                    System.out.println("Specialist");
                 }
                 System.out.println();
-                foundDoctor=true;
-
             }
-        }
-        if (!foundDoctor) {
-            System.out.println("No doctors found.");
+            System.out.println("Total Doctor Appointments: " + doctorAppointments.size());
         }
     }
 
     private void viewPatientAppointment() {
+        List<PatientAppointment> patientAppointments= appointmentDAO.getAllPatientAppointments();
         System.out.println("===================================");
         System.out.println("       PATIENT APPOINTMENTS ONLY");
         System.out.println("===================================");
 
-        boolean foundPatient = false;
-
-        for (Appointment2 a : allAppointments) {
-            if (a instanceof PatientAppointment) {
-                PatientAppointment patientAppointment = (PatientAppointment) a;
-                System.out.println(patientAppointment.toString());
-                if (patientAppointment.isFirstVisit()) {
-                    System.out.println("The first visit");
+        if(patientAppointments.isEmpty()){
+            System.out.println("No patient appointments in database");
+        }else{
+            for (int i=0; i<patientAppointments.size(); i++){
+                PatientAppointment patientAppointment= patientAppointments.get(i);
+                System.out.println((i+1) + ". " + patientAppointment.toString());
+                System.out.println(" First visit: " + patientAppointment.isFirstVisit());
+                if (patientAppointment.isFirstVisit()){
+                    System.out.println("First Visit");
                 }
                 System.out.println();
-                foundPatient = true;
             }
-        }
-        if(!foundPatient){
-            System.out.println("No patient found.");
+            System.out.println("Total Patient Appointments: " + patientAppointments.size());
         }
     }
+
+    private void updateAppointment(){
+        System.out.println("\\n┌─ UPDATE APPOINTMENT ─────────────────────────┐");
+        System.out.println("│ Enter Staff ID to update: ");
+
+        try{
+            int appointmentId=scanner.nextInt();
+            scanner.nextLine();
+
+            Appointment existingAppointment= appointmentDAO.getAppointmentById(appointmentId);
+
+            if (existingAppointment==null){
+                System.out.println("No appointment found with ID: " + appointmentId);
+                return;
+            }
+
+            System.out.println("Current info: ");
+            System.out.println(" " + existingAppointment.toString());
+            System.out.println("└────────────────────────────────────────┘");
+
+            System.out.println("\n┌─ ENTER NEW VALUES ─────────────────────┐");
+            System.out.println("│ (Press Enter to keep current value)   │");
+
+            System.out.println("│ New Date [" + existingAppointment.getDate() + "]: ");
+            String newDate= scanner.nextLine();
+            if(newDate.trim().isEmpty()){
+                newDate=existingAppointment.getDate();
+            }
+
+            System.out.println(" New Status [" + existingAppointment.getStatus()+ "]:" );
+            String newStatus= scanner.nextLine();
+            if(newStatus.trim().isEmpty()){
+                newStatus=existingAppointment.getStatus();
+            }
+
+            if (existingAppointment instanceof DoctorAppointment){
+                DoctorAppointment doctorAppointment=(DoctorAppointment) existingAppointment;
+                System.out.println("New Name [" + doctorAppointment.getDoctorName() + "]: ");
+                String newName=scanner.nextLine();
+                if (newName.trim().isEmpty()){
+                    newName=doctorAppointment.getDoctorName();
+                }
+
+                System.out.println("New specialization[" + doctorAppointment.getSpecialization() + "]: ");
+                String newSpec=scanner.nextLine();
+                if (newSpec.trim().isEmpty()){
+                    newSpec=doctorAppointment.getSpecialization();
+                }
+
+                DoctorAppointment updatedDoctor= new DoctorAppointment(appointmentId, newDate, newStatus, newName, newSpec);
+                appointmentDAO.updateDoctorAppointments(updatedDoctor);
+            }else if (existingAppointment instanceof PatientAppointment){
+                PatientAppointment patientAppointment=(PatientAppointment) existingAppointment;
+                System.out.println(" New Name [" + patientAppointment.getPatientName() + "]: ");
+                String newPatName=scanner.nextLine();
+                if (newPatName.trim().isEmpty()){
+                    newPatName=patientAppointment.getPatientName();
+
+                PatientAppointment updatePatient= new PatientAppointment(appointmentId, newDate, newStatus, newPatName);
+                appointmentDAO.updatePatientAppointment(updatePatient);
+                }
+                System.out.println("└────────────────────────────────────────┘");
+            }
+            }catch(IllegalArgumentException e){
+                System.out.println("Validation Error: " + e.getMessage());
+        }
+    }
+
+
+    private void deleteAppointment(){
+
+    }
+
+
 
     private void demonstratePolymorphism(){
         System.out.println("========================================");
